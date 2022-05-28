@@ -2,33 +2,22 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import Navbar from './components/Navbar.vue'
+import 'element-plus/theme-chalk/display.css'
 </script>
 
 <template>
   <div>
     <Navbar />
-    <router-view></router-view>
-
+    <router-view name="SearchPost"></router-view>
 
     <!-- main -->
     <el-row :gutter="40">
-      <el-col :span="18">
+      <el-col :xs="18" :sm="18" :md="18" :lg="18" :xl="18">
         <router-view></router-view>
       </el-col>
 
-      <el-col :span="6">
-        <el-card class="box-card" style="text-align: center">
-          <template #header>
-            <el-avatar :size="200" src="https://i.ytimg.com/vi/td_YpM2mowo/maxresdefault.jpg" />
-          </template>
-          <div style="font-weight:200">David Chou</div>
-          <div>Web Front End</div>
-          <div>
-            <img src="./assets/github-brands.svg" alt="" class="profilo-icon">
-            <img src="./assets/linkedin-brands.svg" alt="" class="profilo-icon">
-            <img src="./assets/instagram-brands.svg" alt="" class="profilo-icon">
-          </div>
-        </el-card>
+      <el-col :xs="6" :sm="6" :md="6" :lg="6" :xl="6" class="hidden-sm-and-down">
+        <router-view name="Profile"></router-view>
       </el-col>
     </el-row>
 

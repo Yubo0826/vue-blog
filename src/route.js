@@ -1,15 +1,24 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '@/components/views/Home.vue'
-import Post from '@/components/views/Post.vue'
+import SearchPost from './components/views/SearchPost.vue'
+import PostList from './components/views/PostList.vue'
+import Post from './components/views/Post.vue'
+import Profile from './components/Profile.vue'
 
 const routes = [
     {
         path: '/',
-        component: Home
+        components: {
+            default: PostList,
+            SearchPost,
+            Profile
+        }
     },
     {
-        path: '/post/:id',
-        component: Post
+        path: '/posts/:id',
+        components: {
+            default: Post,
+            Profile
+        }
     }
 ]
 
