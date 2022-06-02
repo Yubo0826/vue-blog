@@ -1,8 +1,8 @@
 <template>
     <div>
-        <el-button text>Home</el-button>
-        <el-button text>About</el-button>
-        <el-button text>Contact</el-button>
+        <el-button text @click="$router.push('/')">Home</el-button>
+        <el-button text @click="$router.push('/')">About</el-button>
+        <el-button text @click="$router.push('/')">Contact</el-button>
     </div>
 </template>
 <script>

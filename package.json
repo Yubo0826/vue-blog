@@ -12,7 +12,10 @@
     "axios": "^0.27.2",
     "element-plus": "^2.2.0",
     "vue": "^3.2.25",
+    "vue-progressive-image": "^4.0.0",
     "vue-router": "^4.0.15",
+    "vue-utterances": "^0.2.4",
+    "vue3-infinite-scroll-good": "^1.0.2",
     "vue3-markdown-it": "^1.0.10"
   },
   "devDependencies": {
