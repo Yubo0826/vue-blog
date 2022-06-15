@@ -7,7 +7,11 @@
                 :key="post.id"
                 >
                 <el-card :body-style="{ padding: '0px' }">
-                    <img :src="post.attributes.image.data.attributes.url" class="image" style="width:100%;height:40%;object-fit:cover">
+                    <ProgressiveImage
+                        lazy-placeholder
+                        :placeholder-src="post.attributes.image.data.attributes.formats.thumbnail.url"
+                        :src="post.attributes.image.data.attributes.url"
+                    />
                     <div style="padding: 15px;">
                         <h2 class="title" @click="$router.push(`/posts/${post.id}`)">{{ post.attributes.title }}</h2>
                         <!-- <Markdown :source="post.attributes.content"/> -->
@@ -27,22 +31,28 @@
                 </el-card>
             </el-col>
         </el-row>
+        <div v-if="loading">
+            <img src="../../assets/Eclipse-1s-45px.svg" alt="">
+        </div>
     </div>
 </template>
 <script>
 import axios from 'axios'
 import Markdown from 'vue3-markdown-it'
 import PostInfo from '../PostInfo.vue'
+import { ProgressiveImage } from "vue-progressive-image"
 
 export default {
     components: {
         Markdown,
-        PostInfo
+        PostInfo,
+        ProgressiveImage
     },
     data() {
         return {
             posts: [],
             busy: false,
+            loading: false,
             postSize: 0,
         }
     },
@@ -60,11 +70,22 @@ export default {
         loadMore() {
             // busy false 執行loadMore；busy true 不執行
             this.busy = true
+            this.loading = true
             this.postSize += 6
             axios.get(this.$strapiURL + `/api/articles?populate=*&pagination[pageSize]=${this.postSize}`)
                 .then((res) => {
-                    this.posts = res.data.data
-                    this.busy = false
+                    // if 加載完畢
+                    if(JSON.stringify(this.posts) === JSON.stringify(res.data.data)) {
+                        this.busy = true
+                        this.loading = false
+                    } else {
+                        this.posts = res.data.data
+                        this.busy = false
+                        this.loading = false
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
                 })
         }
     },
