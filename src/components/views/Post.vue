@@ -46,5 +46,7 @@ export default {
 }
 </script>
 <style>
-    
+    pre code.hljs{
+        border-radius: 8px;
+    }
 </style>

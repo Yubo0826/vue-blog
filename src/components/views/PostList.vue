@@ -1,9 +1,29 @@
 <template>
+    <h1>David's Blog</h1>
+    <h2>I write articles or take notes about Web Development</h2>
+    <el-input v-model="searchWord" class="w-50 m-2" placeholder="Type something" @click="searchBox = true">
+        <template #prefix>
+        <el-icon class="el-input__icon"><search /></el-icon>
+        </template>
+    </el-input>
+    <transition>
+        <SearchBox @close="closeSearchBox" v-if="searchBox" />
+    </transition>
+    <div class="flex justify-space-between mb-4">
+    <button
+        v-for="(item, index) in category"
+        :key="item"
+        class="filter-category-btn"
+        :class="{active: categoryInActive[index]}"
+        @click="handleFilterCategoryBtn(index)"
+        >{{ item }}</button
+    >
+    </div>
     <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="20">
         <el-row :gutter="20">
             <el-col 
                 :xs="24" :sm="24" :md="12" :lg="8" :xl="8"
-                v-for="post in posts"
+                v-for="post in filterPostsByCategory"
                 :key="post.id"
                 >
                 <el-card :body-style="{ padding: '0px' }">
@@ -40,13 +60,26 @@
 import axios from 'axios'
 import Markdown from 'vue3-markdown-it'
 import PostInfo from '../PostInfo.vue'
+import SearchBox from '../SearchBox.vue'
 import { ProgressiveImage } from "vue-progressive-image"
 
 export default {
     components: {
         Markdown,
         PostInfo,
-        ProgressiveImage
+        ProgressiveImage,
+        SearchBox
+    },
+    computed: {
+        filterPosts() {
+            return this.posts.filter(el => el.attributes.title.includes(this.searchWord))
+        },
+        filterPostsByCategory() {
+            if(this.currentCategory) {
+                return this.posts.filter(el => el.attributes.title.includes(this.currentCategory))
+            }
+            return this.posts
+        }
     },
     data() {
         return {
@@ -54,6 +87,11 @@ export default {
             busy: false,
             loading: false,
             postSize: 0,
+            searchWord: '',
+            category: ['Front-End', 'Javascript', 'Vue', 'API工具'],
+            categoryInActive: [false, false, false, false],
+            currentCategory: null,
+            searchBox: false
         }
     },
     created() {
@@ -87,6 +125,22 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 })
+        },
+        handleFilterCategoryBtn(index) {
+            if(this.categoryInActive[index]) {
+                this.categoryInActive[index] = !this.categoryInActive[index]
+                this.currentCategory = null
+            } else {
+                this.categoryInActive.forEach((el, ins, arr) => {
+                    arr[ins] = false
+                })
+                this.categoryInActive[index] = true
+                this.currentCategory = this.category[index]
+            }
+        },
+        closeSearchBox() {
+            this.searchBox = false
+            console.log(this.searchBox);
         }
     },
 }
@@ -96,4 +150,27 @@ export default {
         text-decoration: underline;
         cursor: pointer;
     }
+    .filter-category-btn {
+        padding: 8px;
+        margin: 5px;
+        color: #409eff;
+        background-color: #f5f7fa;
+        border: 0;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .active {
+        color: #fff;
+        background-color: #409eff;
+    }
+    .v-enter-active,
+    .v-leave-active {
+    transition: opacity 0.25s ease;
+    }
+
+    .v-enter-from,
+    .v-leave-to {
+    opacity: 0;
+    }
+    
 </style>
